@@ -137,5 +137,22 @@ remainder section;  // 剩余区
 
 ### Peterson算法
 
+```c
+// Pi进程
+flag[i]=TURE; turn=j;
+while(flag[j]&&turn==j);
+//对方想进且最后一次谦让是自己，则本进程等待，
+//否则（指对方释放临界区或最后一次礼让是对方）
+//本进程进入临界区。
+critical section;
+flag[i]=FLASE;
+remainder section;
 
+// Pj进程
+flag[j] =TRUE;turn=i;  // 进入区
+while(flag[i]&&turn==i);   // 进入区
+critical section;  // 临界区
+flag[j]=FLASE;  // 退出区
+remainder section;  // 剩余区
+```
 
