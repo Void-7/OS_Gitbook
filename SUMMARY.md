@@ -11,7 +11,7 @@
 
 ## 并发 <a id="concurrency"></a>
 
-* [进程同步](concurrency/jin-cheng-tong-bu.md)
+* [进程同步与互斥](concurrency/jin-cheng-tong-bu.md)
 
 ## 习题
 
