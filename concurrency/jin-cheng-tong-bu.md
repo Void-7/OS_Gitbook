@@ -138,8 +138,12 @@ remainder section;  // 剩余区
 ### Peterson算法
 
 ```c
+bool flag[2];
+int turn = 0;//表示优先让哪个进程访问临界区
+
 // Pi进程
-flag[i]=TURE; turn=j;
+flag[i]=TURE;//表示自己想进入临界区 
+turn=j;//可以让对方先进
 while(flag[j]&&turn==j);
 //对方想进且最后一次谦让是自己，则本进程等待，
 //否则（指对方释放临界区或最后一次礼让是对方）
