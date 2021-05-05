@@ -113,7 +113,25 @@ remainder section;  // 剩余区
 
 ### 双标志后检查
 
+算法二是先检测对方进程状态标志后，再置自己标志，由于在检测和放置中可插入另一个进程到达时的检测操作，会造成两个进程在分别检测后，同时进入临界区。为此，算法三釆用先设置自己标志为TRUE后,再检测对方状态标志，若对方标志为TURE，则进程等待；否则进入临界区。
 
+```c
+// Pi进程
+flag[i] =TRUE;
+while(flag[j]);
+critical section;
+flag[i] =FLASE;
+remainder section;
+
+// Pj进程
+flag[j] =TRUE;  // 进入区
+while(flag[i]);  // 进入区
+critical section;  // 临界区
+flag [j] =FLASE;   // 退出区
+remainder section;  // 剩余区
+```
+
+当两个进程几乎同时都想进入临界区时，它们分别将自己的标志值flag设置为TRUE，并且同时检测对方的状态（执行while语句），发现对方也要进入临界区，于是双方互相谦让，结果谁也进不了临界区，（每个进程都会认为另一个已经进入临界区），引发死锁。
 
 ### Peterson算法
 
