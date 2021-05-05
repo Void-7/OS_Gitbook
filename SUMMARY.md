@@ -12,12 +12,9 @@
 ## 并发 <a id="concurrency"></a>
 
 * [进程同步与互斥](concurrency/jin-cheng-tong-bu.md)
+* [信号量机制](concurrency/xin-hao-liang-ji-zhi.md)
 
 ## 习题
 
 * [信号量](xi-ti/xin-hao-liang.md)
-
----
-
-* [信号量机制](xin-hao-liang-ji-zhi.md)
 
