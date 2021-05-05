@@ -222,7 +222,13 @@ boolean TestAndSet(boolean *lock){
 
 #### Swap指令
 
+或称Exchange/XCHG指令。同样用硬件实现，不允许中断。
 
+以下为使用C语言描述的逻辑：
+
+```c
+
+```
 
 
 
