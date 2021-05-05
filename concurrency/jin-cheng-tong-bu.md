@@ -176,7 +176,13 @@ remainder section;  // 剩余区
 
 ### 硬件指令方法/锁方法
 
-#### 
+#### TestAndSet指令
+
+
+
+#### Swap指令
+
+
 
 
 
