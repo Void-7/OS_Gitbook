@@ -17,3 +17,7 @@
 
 * [信号量](xi-ti/xin-hao-liang.md)
 
+---
+
+* [信号量机制](xin-hao-liang-ji-zhi.md)
+
