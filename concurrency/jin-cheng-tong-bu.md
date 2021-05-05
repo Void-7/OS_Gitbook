@@ -194,6 +194,26 @@ remainder section;  // 剩余区
 
 #### TestAndSet指令
 
+```c
+boolean TestAndSet(boolean *lock){
+    boolean old;
+    old = *lock;
+    *lock=true;
+    return old;
+}
+```
+
+这条指令是原子操作，即执行该代码时不允许被中断。其功能是读出指定标志后把该标志设置为真。
+
+可以为每个临界资源设置一个共享布尔变量lock，表示资源的两种状态：true表示正被占用，初值为false。在进程访问临界资源之前，利用TestAndSet检查和修改标志lock；若有进程在临界区，则重复检查，直到进程退出。利用该指令实现进程互斥的算法描述如下：
+
+```c
+    while TestAndSet (&lock);
+    // 进程的临界区代码段;
+    lock=false;
+    // 剩余区代码段;
+```
+
 
 
 #### Swap指令
