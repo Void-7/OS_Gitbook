@@ -227,8 +227,23 @@ boolean TestAndSet(boolean *lock){
 以下为使用C语言描述的逻辑：
 
 ```c
-
+//功能描述
+Swap(boolean *a, boolean *b){  
+    boolean temp;
+    Temp=*a;
+    *a = *b;
+    *b = temp;
+}
 ```
 
+```c
+bool old=true;
+while(old==true)
+    swap(&lock,&old);
+//进程的临界区代码段；
+lock=false;
+//剩余区代码段；
+```
 
+逻辑上来看Swap和TS/TSL指令并无区别，特点同上。
 
