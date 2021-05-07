@@ -1,6 +1,7 @@
 # Table of contents
 
-* [Introduction](README.md)
+* [Notes On Operating Systems](README.md)
+* [序言](xu-yan.md)
 
 ## 虚拟存储器
 
