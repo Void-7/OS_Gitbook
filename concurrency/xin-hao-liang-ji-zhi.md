@@ -71,6 +71,26 @@ typedef struct {
 
 由于整型信号量忙等的缺陷，又提出了记录型信号量如上定义。
 
+```c
+//某进程需要使用资源时，通过wait原语申请
+void wait(semaphore S){
+    S.value--;
+    if(S.value<0){
+        block(S.L);
+    }
+}
+
+//进程使用完资源后，通过signal原语释放
+void signal(semaphore S){
+    S.value++;
+    if(S.value<=0){    
+    //若释放进程后，还有别的资源在等待资源，
+    //则唤醒等待队列中的一个进程使其从阻塞状态转为就绪
+        wakeup(S.L);
+    }
+}
+```
+
 
 
 
