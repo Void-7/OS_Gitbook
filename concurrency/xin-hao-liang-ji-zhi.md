@@ -76,6 +76,9 @@ typedef struct {
 void wait(semaphore S){
     S.value--;
     if(S.value<0){
+    //如果剩余资源数量不够，
+    //使用block原语将进程从运行态转入阻塞态，
+    //并将其挂到S的等待队列中（即阻塞队列）
         block(S.L);
     }
 }
