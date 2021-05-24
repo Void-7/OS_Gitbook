@@ -14,6 +14,7 @@
 
 * [进程同步与互斥](concurrency/jin-cheng-tong-bu.md)
 * [信号量机制](concurrency/xin-hao-liang-ji-zhi.md)
+* [死锁](concurrency/si-suo.md)
 
 ## 持久化
 
