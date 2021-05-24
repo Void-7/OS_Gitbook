@@ -24,7 +24,7 @@ This Gitbook is aimed for readers getting a better understanding of common conce
 
 _如虚拟存储器部分涉及**系统结构**或**组成**，在OS课本中同样又讲了一遍，这说明这个概念还是非常重要的。_
 
-3、资料和参考主要来自“序言”中的教材以及互联网，出处会注明。
+3、资料和参考主要来自“序言”中的教材以及互联网（王道OS还是挺不错的），出处会注明。
 
 
 
