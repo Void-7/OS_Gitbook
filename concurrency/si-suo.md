@@ -159,5 +159,165 @@
 
 ### 银行家算法
 
+算法步骤：
+
+1. 输入请求资源的进程编号IDX和请求的资源向量REQ\(从第1种到第m种资源的个数）；
+2. 若请求的资源向量大于初始声明的Claim\[IDX\]向量减去已分配的Allocate\[IDX\]向量（即Need向量表示进程IDX还需要各种资源的数目），则认为出错，否则转入第三步；
+3. 若请求的向量资源大于当前系统可用资源Available向量，则使进程IDX等待，否则转入第四步；
+4. 尝试分配，调用安全性算法检测分配后是否安全。若安全，则真正分配。否则作废，使进程IDX等待。
+
+安全性算法步骤：
+
+1. 设置两个向量：工作向量Work=Available、Finish\[i\]表示是否已向进程i分配过资源。
+2. 通过死循环不断检查进程列表中是否满足以下条件的进程：
+
+   1. Finish\[i\]=false;
+   2. Claim\[i\]-Allocate\[i\]&lt;=Work;
+
+   若找到，则执行第三步，否则第四步。
+
+3. 将进程i的Finish\[i\]标记为true，并赋值Work+=Allocate\[i\]表示进程i运行完成后会释放的资源数目要加到当前系统可用的资源数目上。
+4. 扫描一遍所有进程的Finish是否为true，若存在false则跳出扫描，返回false表示当前为不安全状态。若没有找到false，则返回true表示当前为安全状态。
+
+用C实现了一个简单的银行家算法程序，代码如下：
+
+```c
+#include <stdio.h>
+#define m 3
+#define n 4
+
+//to record safe exectuting order
+int order[n];
+
+/*  struct for
+*   system resource allocation state */
+typedef struct {
+    int resrc[m];    // resources in general
+    int avail[m];    // available resouces
+    int alloc[n][m]; // resources allocated
+    int claim[n][m]; // resouces max claimed
+} state;
+
+/* return matrix a - matrix b */
+int *delta(int a[], int b[], int need[]) {
+    for (int i = 0; i < m; i++) {
+        need[i] = a[i] - b[i];
+    }
+    return need;
+}
+
+/* return if matrix a <= matrix b */
+int notBiggerThan(int a[], int b[]) {
+    int flag = 1;
+    for (int i = 0; i < m; i++) {
+        if (a[i] > b[i]) {
+            flag = 0;
+            break;
+        }
+    }
+    return flag;
+}
+
+int isSafe(state x) {
+    int flag = 1;
+    int Possible = 1;
+    int cnt = 0; // index of oder array
+    int Finish[n] = {0};
+    int Work[m]; // current resources allocated
+    for (int i = 0; i < m; i++)
+        Work[i] = x.avail[i];
+
+    while (Possible) {
+        int Found = 0;
+        for (int i = 0; i < n; i++) {
+            int Need[m] = {0};
+            if (!Finish[i]) {
+                if (notBiggerThan(delta(x.claim[i], x.alloc[i], Need), Work)) {
+                    for (int j = 0; j < m; j++) {
+                        Work[j] += x.alloc[i][j];
+                    }
+                    Finish[i] = 1;
+                    Found = 1;
+                    order[cnt++] = i + 1;
+                }
+            }
+        }
+        if (!Found)
+            Possible = 0;
+    }
+
+    for (int i = 0; i < n; i++)
+        if (!Finish[i]) {
+            flag = 0;
+            break;
+        }
+
+    return flag;
+    // 0:unsafe ; 1:safe ;
+}
+
+void allocResrc(state *src, int req[], int pIndex) {
+    for (int i = 0; i < m; i++) {
+        src->alloc[pIndex][i] += req[i];
+        src->avail[i] -= req[i];
+    }
+}
+
+/*   params:
+ *       @x:  current system resource allocation state
+ *       @pIndex:    process index
+ *       @request:   request vector */
+void banker(state x, int pIndex, int request[]) {
+    int Need[m] = {0};
+    if (!notBiggerThan(request,
+                       delta(x.claim[pIndex], x.alloc[pIndex], Need))) {
+        printf("[ERROR] Requsted resrc num is bigger than it've claimed!\n");
+    } else if (!notBiggerThan(request, x.avail)) {
+        printf("[WARN] Requsted resrc num is bigger than those "
+               "available!\nProcess %d blocked.\n",
+               pIndex);
+    } else {
+        state tmp = x;
+        allocResrc(&tmp, request, pIndex);
+        int s = isSafe(tmp);
+        if (s) {
+            x=tmp;  //allocate for real
+            printf("Safe! Found an order:");
+            for (int i = 0; i < n; i++)
+                printf("%d ", order[i]);
+            printf("\n");
+        } else
+            printf("Unsafe!\n");
+    }
+}
+
+/*   params:
+ *       @IDX:    process index
+ *       @REQ[]:  request vector */
+void prompt(int *IDX, int REQ[]) {
+    printf("Please input the process index(1-%d):\n", m + 1);
+    scanf("%d", IDX);
+    *IDX -= 1;
+    printf("Please input the request resrc vector(divided by space):\n");
+    for (int i = 0; i < m; i++) {
+        scanf("%d", &REQ[i]);
+    }
+}
+
+int main() {
+    int IDX;
+    int REQ[m];
+    state input = {
+        claim : {{3, 2, 2}, {6, 1, 3}, {3, 1, 4}, {4, 2, 2}},
+        alloc : {{1, 0, 0}, {5, 1, 1}, {2, 1, 1}, {0, 0, 2}},
+        avail : {1, 1, 2},
+        resrc : {9, 3, 6}
+    };
+    prompt(&IDX, REQ);
+    banker(input, IDX, REQ);
+    return 0;
+}
+```
+
 
 
